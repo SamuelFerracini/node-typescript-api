@@ -1,4 +1,5 @@
 import { StormGlass, IForecastPoint } from '@src/clients/stormGlass'
+import { InternalError } from '@src/util/errors/internal-error'
 
 export enum EBeachPosition {
   S = 'S',
@@ -22,31 +23,50 @@ export interface ITimeForecast {
   forecast: IBeachForecast[]
 }
 
+export class ForecastProcessingInternalError extends InternalError {
+  constructor(message: string) {
+    super(`Unexpected error during the forecast processing: ${message}`)
+  }
+}
+
 export class Forecast {
   constructor(protected stormGlass = new StormGlass()) {}
 
   public async processForecastForBeaches(
     beaches: IBeach[]
   ): Promise<ITimeForecast[]> {
-    const pointsWithCorrectSources: IBeachForecast[] = []
+    try {
+      const pointsWithCorrectSources: IBeachForecast[] = []
 
-    for (const beach of beaches) {
-      const points = await this.stormGlass.fetchPoints(beach.lat, beach.lng)
-      const enrichedBeachData = points.map((e) => ({
-        ...{},
-        ...{
-          lat: beach.lat,
-          lng: beach.lng,
-          name: beach.name,
-          position: beach.position,
-          rating: 1 // TODO: Implement rating service
-        },
-        ...e
-      }))
-      pointsWithCorrectSources.push(...enrichedBeachData)
+      for (const beach of beaches) {
+        const points = await this.stormGlass.fetchPoints(beach.lat, beach.lng)
+
+        const enrichedBeachData = this.enrichBeachData(points, beach)
+
+        pointsWithCorrectSources.push(...enrichedBeachData)
+      }
+
+      return this.mapForecastByTime(pointsWithCorrectSources)
+    } catch (error) {
+      throw new ForecastProcessingInternalError(error ?? error.message)
     }
+  }
 
-    return this.mapForecastByTime(pointsWithCorrectSources)
+  private enrichBeachData(
+    points: IForecastPoint[],
+    beach: IBeach
+  ): IBeachForecast[] {
+    return points.map((e) => ({
+      ...{},
+      ...{
+        lat: beach.lat,
+        lng: beach.lng,
+        name: beach.name,
+        position: beach.position,
+        rating: 1 // TODO: Implement rating service
+      },
+      ...e
+    }))
   }
 
   private mapForecastByTime(forecast: IBeachForecast[]): ITimeForecast[] {
