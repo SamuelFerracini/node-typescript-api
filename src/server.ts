@@ -4,14 +4,18 @@ import './util/module-alias'
 import { Server } from '@overnightjs/core'
 import { ForecastController } from './controllers/forecast.controller'
 
+import * as database from './database'
+
 export class SetupServer extends Server {
   constructor(private readonly port = 3000) {
     super()
   }
 
-  public init() {
+  public async init() {
     this.setupExpress()
     this.setupControllers()
+
+    await this.setupDatabase()
   }
 
   private setupExpress() {
@@ -22,6 +26,14 @@ export class SetupServer extends Server {
     const forecastController = new ForecastController()
 
     this.addControllers([forecastController])
+  }
+
+  private async setupDatabase() {
+    await database.connect()
+  }
+
+  public async close() {
+    await database.close()
   }
 
   public getApp() {
