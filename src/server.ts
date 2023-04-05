@@ -2,7 +2,9 @@ import bodyParser from 'body-parser'
 import './util/module-alias'
 
 import { Server } from '@overnightjs/core'
+
 import { ForecastController } from './controllers/forecast'
+import { BeachesController } from './controllers/beaches'
 
 import * as database from './database'
 
@@ -24,8 +26,9 @@ export class SetupServer extends Server {
 
   private setupControllers() {
     const forecastController = new ForecastController()
+    const beachesController = new BeachesController()
 
-    this.addControllers([forecastController])
+    this.addControllers([forecastController, beachesController])
   }
 
   private async setupDatabase() {
