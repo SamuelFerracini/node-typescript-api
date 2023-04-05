@@ -1,6 +1,6 @@
-import mongoose, { Model, Document } from 'mongoose'
+import mongoose, { Document } from 'mongoose'
 
-export enum BeachPosition {
+export enum EBeachPosition {
   S = 'S',
   E = 'E',
   W = 'W',
@@ -10,7 +10,7 @@ export enum BeachPosition {
 export interface IBeach {
   _id?: string
   name: string
-  position: BeachPosition
+  position: EBeachPosition
   lat: number
   lng: number
 }

@@ -13,7 +13,7 @@ export interface IBeach {
   position: EBeachPosition
   lat: number
   lng: number
-  user: string
+  // user: string
 }
 
 export interface IBeachForecast extends Omit<IBeach, 'user'>, IForecastPoint {}
