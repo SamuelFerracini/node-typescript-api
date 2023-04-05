@@ -11,10 +11,14 @@ const forecast = new Forecast()
 export class ForecastController {
   @Get('')
   public async getForecastForgeLoggedUser(_: Request, res: Response) {
-    const beaches = await Beach.find({})
+    try {
+      const beaches = await Beach.find({})
 
-    const forecastData = await forecast.processForecastForBeaches(beaches)
+      const forecastData = await forecast.processForecastForBeaches(beaches)
 
-    return res.send(forecastData)
+      return res.send(forecastData)
+    } catch (error) {
+      return res.status(500).send({ error: 'Internal server error' })
+    }
   }
 }
