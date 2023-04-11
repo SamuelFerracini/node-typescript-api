@@ -9,6 +9,10 @@
         "apiUrl": "https://api.stormglass.io/v2",
         "apiToken": "do-not-hard-code"
       }
+    },
+    "auth": {
+      "key": "some-key",
+      "tokenExpiresIn": "20000000"
     }
   }
 }
