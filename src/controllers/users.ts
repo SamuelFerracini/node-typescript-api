@@ -2,6 +2,7 @@ import { Controller, Post } from '@overnightjs/core'
 import { Response, Request } from 'express'
 import { User } from '@src/models/user'
 import { BaseController } from '.'
+import logger from '@src/logger'
 
 @Controller('users')
 export class UsersController extends BaseController {
@@ -14,6 +15,7 @@ export class UsersController extends BaseController {
 
       return res.status(201).send(newUser)
     } catch (error) {
+      logger.error(error)
       return this.sendCreateUpdateErrorResponse(res, error)
     }
   }

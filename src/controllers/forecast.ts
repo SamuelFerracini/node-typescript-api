@@ -5,6 +5,7 @@ import { ClassMiddleware, Controller, Get } from '@overnightjs/core'
 import { authMiddleware } from '@src/middlewares/auth'
 import { Forecast } from '@src/services/forecast'
 import { Beach } from '@src/models/beach'
+import logger from '@src/logger'
 
 const forecast = new Forecast()
 
@@ -20,6 +21,7 @@ export class ForecastController {
 
       return res.send(forecastData)
     } catch (error) {
+      logger.error(error)
       return res.status(500).send({ error: 'Internal server error' })
     }
   }
