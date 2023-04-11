@@ -78,7 +78,9 @@ describe('Beach forecast functional tests', () => {
 
     expect(status).toBe(500)
     expect(body).toEqual({
-      error: 'Internal server error'
+      code: 500,
+      error: 'Internal Server Error',
+      message: 'Internal server error'
     })
   })
 })
