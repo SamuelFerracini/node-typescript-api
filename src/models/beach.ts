@@ -13,6 +13,7 @@ export interface IBeach {
   position: EBeachPosition
   lat: number
   lng: number
+  user: string
 }
 
 const schema = new mongoose.Schema(
