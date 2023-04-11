@@ -5,9 +5,10 @@ import { Server } from '@overnightjs/core'
 
 import { ForecastController } from './controllers/forecast'
 import { BeachesController } from './controllers/beaches'
+import { UsersController } from './controllers/users'
+import { AuthController } from './controllers/auth'
 
 import * as database from './database'
-import { UsersController } from './controllers/users'
 
 export class SetupServer extends Server {
   constructor(private readonly port = 3000) {
@@ -29,11 +30,13 @@ export class SetupServer extends Server {
     const forecastController = new ForecastController()
     const beachesController = new BeachesController()
     const usersController = new UsersController()
+    const authController = new AuthController()
 
     this.addControllers([
       forecastController,
       beachesController,
-      usersController
+      usersController,
+      authController
     ])
   }
 
