@@ -5,13 +5,13 @@ import { ClassMiddleware, Controller, Get } from '@overnightjs/core'
 import { authMiddleware } from '@src/middlewares/auth'
 import { Forecast } from '@src/services/forecast'
 import { Beach } from '@src/models/beach'
-import logger from '@src/logger'
+import { BaseController } from '.'
 
 const forecast = new Forecast()
 
 @Controller('forecast')
 @ClassMiddleware(authMiddleware)
-export class ForecastController {
+export class ForecastController extends BaseController {
   @Get('')
   public async getForecastForgeLoggedUser(req: Request, res: Response) {
     try {
@@ -21,8 +21,10 @@ export class ForecastController {
 
       return res.send(forecastData)
     } catch (error) {
-      logger.error(error)
-      return res.status(500).send({ error: 'Internal server error' })
+      return this.sendErrorResponse(res, {
+        code: 500,
+        message: 'Internal server error'
+      })
     }
   }
 }

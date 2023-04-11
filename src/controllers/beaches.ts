@@ -6,10 +6,11 @@ import { Beach } from '../models/beach'
 import mongoose from 'mongoose'
 import { authMiddleware } from '@src/middlewares/auth'
 import logger from '@src/logger'
+import { BaseController } from '.'
 
 @Controller('beaches')
 @ClassMiddleware(authMiddleware)
-export class BeachesController {
+export class BeachesController extends BaseController {
   @Post('')
   public async create(req: Request, res: Response) {
     try {
@@ -19,11 +20,7 @@ export class BeachesController {
 
       return res.status(201).send(result)
     } catch (error) {
-      logger.error(error)
-      if (error instanceof mongoose.Error.ValidationError)
-        return res.status(422).send({ error: error.message })
-
-      return res.status(500).send({ error: 'Internal server error' })
+      return this.sendCreateUpdateErrorResponse(res, error)
     }
   }
 }
