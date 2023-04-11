@@ -1,6 +1,6 @@
 import { Response } from 'express'
 import mongoose from 'mongoose'
-import { CUSTOM_VALIDATION } from '@src/models/user'
+import { ECUSTOM_VALIDATION } from '@src/models/user'
 import logger from '@src/logger'
 
 export abstract class BaseController {
@@ -23,7 +23,7 @@ export abstract class BaseController {
     const duplicatedKindErrors = Object.values(error.errors).filter(
       (err) =>
         err.name === 'ValidatorError' &&
-        err.kind === CUSTOM_VALIDATION.DUPLICATED
+        err.kind === ECUSTOM_VALIDATION.DUPLICATED
     )
 
     if (duplicatedKindErrors.length) return { code: 409, error: error.message }

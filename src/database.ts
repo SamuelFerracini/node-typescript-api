@@ -1,7 +1,7 @@
 import config, { IConfig } from 'config'
-import mongoose, { connect as mongooseConnect, connection } from 'mongoose'
+import { connect as mongooseConnect, connection } from 'mongoose'
 
-mongoose.set('strictQuery', false)
+// mongoose.set('strictQuery', false)
 
 const dbConfig: IConfig = config.get('App.database')
 

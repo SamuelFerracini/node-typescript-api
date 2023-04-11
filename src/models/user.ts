@@ -9,7 +9,7 @@ export interface User {
   password: string
 }
 
-export enum CUSTOM_VALIDATION {
+export enum ECUSTOM_VALIDATION {
   DUPLICATED = 'DUPLICATED'
 }
 
@@ -44,7 +44,7 @@ schema.path('email').validate(
     return !emailCount
   },
   'already exists in the database.',
-  CUSTOM_VALIDATION.DUPLICATED
+  ECUSTOM_VALIDATION.DUPLICATED
 )
 
 /**
