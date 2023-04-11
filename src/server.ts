@@ -1,7 +1,10 @@
-import bodyParser from 'body-parser'
 import './util/module-alias'
 
+import expressPino from 'express-pino-logger'
 import { Server } from '@overnightjs/core'
+import bodyParser from 'body-parser'
+import * as http from 'http'
+import cors from 'cors'
 
 import { ForecastController } from './controllers/forecast'
 import { BeachesController } from './controllers/beaches'
@@ -12,6 +15,8 @@ import * as database from './database'
 import logger from './logger'
 
 export class SetupServer extends Server {
+  private server?: http.Server
+
   constructor(private readonly port = 3000) {
     super()
   }
@@ -25,6 +30,16 @@ export class SetupServer extends Server {
 
   private setupExpress() {
     this.app.use(bodyParser.json())
+    this.app.use(
+      expressPino({
+        logger
+      })
+    )
+    this.app.use(
+      cors({
+        origin: '*'
+      })
+    )
   }
 
   private setupControllers() {
@@ -46,13 +61,22 @@ export class SetupServer extends Server {
   }
 
   public start(): void {
-    this.app.listen(this.port, () => {
+    this.server = this.app.listen(this.port, () => {
       logger.info('Server listening on port: ' + this.port)
     })
   }
 
-  public async close() {
+  public async close(): Promise<void> {
     await database.close()
+    if (this.server) {
+      await new Promise((resolve, reject) => {
+        this.server?.close((err) => {
+          if (err) return reject(err)
+
+          resolve(true)
+        })
+      })
+    }
   }
 
   public getApp() {
